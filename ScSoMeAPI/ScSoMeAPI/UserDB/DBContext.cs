@@ -1,4 +1,5 @@
 ﻿using ScSoMeAPI.Models.User;
+using System.Data.Entity;
 using System.Data.SqlClient;
 
 namespace ScSoMeAPI.UserDB
@@ -55,5 +56,9 @@ namespace ScSoMeAPI.UserDB
             }
         }
 
+
     }
+
+
+
 }
