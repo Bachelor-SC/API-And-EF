@@ -18,7 +18,7 @@ namespace ScSoMeAPI.Controllers
             Activity activity;
             try
             {
-                activity = ctx.Activities.First(a => a.Username == user);
+                activity = ctx.Activities.OrderByDescending(activity => activity.Date).First(a => a.Username == user);
             }
             catch (Exception e)
             {
@@ -42,7 +42,7 @@ namespace ScSoMeAPI.Controllers
             List<Activity> activities;
             try
             {
-                activities = ctx.Activities.Where(a => a.Username == user).ToList();
+                activities = ctx.Activities.Where(a => a.Username == user).OrderByDescending(a => a.Date).ToList();
             }
             catch (Exception e)
             {
