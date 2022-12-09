@@ -22,6 +22,10 @@ public partial class BachelordbContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
+    public virtual DbSet<Comment> Comment { get; set; }
+
+    public virtual DbSet<Post> Post { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 
         => optionsBuilder.UseSqlServer(Environment.GetEnvironmentVariable("connString"));
@@ -67,7 +71,7 @@ public partial class BachelordbContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Username).HasName("PK__Users__536C85E543016B33");
+            entity.HasKey(e => e.Username).HasName("PK__Users__536C85E544CB7113");
 
             entity.Property(e => e.Username)
                 .HasMaxLength(255)
@@ -75,6 +79,46 @@ public partial class BachelordbContext : DbContext
             entity.Property(e => e.HashedPassword)
                 .HasMaxLength(255)
                 .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<Comment>(entity =>
+        {
+            entity.HasKey(e => e.commentID).HasName("PK__Comments__C3B4DFAA7A642927");
+
+            entity.ToTable("Comments");
+
+            entity.Property(e => e.username)
+                .HasMaxLength(255)
+                .HasColumnName("Username");
+            entity.Property(e => e.comment)
+                .HasMaxLength(8000)
+                .HasColumnName("Comment");
+            entity.Property(e => e.likes)
+                .HasColumnName("Likes");
+            entity.Property(e => e.postID)
+                .HasColumnName("PostID");
+            entity.Property(e => e.createdDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnName("createdDate");
+        });
+
+        modelBuilder.Entity<Post>(entity =>
+        {
+            entity.HasKey(e => e.postID).HasName("PK__Posts__AA1260385E437CE9");
+
+            entity.ToTable("Posts");
+
+            entity.Property(e => e.username)
+                .HasMaxLength(255)
+                .HasColumnName("Username");
+            entity.Property(e => e.content)
+                .HasMaxLength(8000)
+                .HasColumnName("Content");
+            entity.Property(e => e.likes)
+                .HasColumnName("Likes");
+            entity.Property(e => e.createdDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnName("createdDate");
         });
 
         OnModelCreatingPartial(modelBuilder);
