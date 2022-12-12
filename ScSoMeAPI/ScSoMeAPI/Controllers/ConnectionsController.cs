@@ -54,7 +54,7 @@ namespace ScSoMeAPI.Controllers
 
             try
             {
-                
+
                 var result = ctx.Connections.Add(con);
                 ctx.SaveChanges();
 
@@ -71,6 +71,23 @@ namespace ScSoMeAPI.Controllers
 
             }
             return con;
+        }
+
+        [HttpGet]
+        [Route("CheckIfAlreadyConnected")]
+        public bool CheckIfAlreadyConnected([FromQuery] string user, string connectionUsername)
+        {
+            using BachelordbContext ctx = new BachelordbContext();
+            bool connected = false;
+
+            foreach (var connection in ctx.Connections.Where(c => c.UsernameCon1 == user || c.UsernameCon2 == user))
+            {
+                if (connection.UsernameCon1 == user && connection.UsernameCon2 == connectionUsername)
+                {
+                    connected = true;
+                }
+            }
+            return connected;
         }
     }
 }

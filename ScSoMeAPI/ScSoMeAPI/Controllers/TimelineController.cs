@@ -103,13 +103,25 @@ namespace ScSoMeAPI.Controllers
 
         [HttpGet]
         [Route("GetAllPosts")]
-        public List<Post> GetAllPosts()
+        public List<Post> GetAllPosts(string username)
         {
             using BachelordbContext ctx = new BachelordbContext();
             List<Post> posts = new List<Post>();
+            List<string> connections = new List<string>();
             try
             {
-                foreach (var post in ctx.Post.Where(p => p.username == "abc" || p.username == "testUser"))
+                foreach(var connection in ctx.Connections.Where(c => c.UsernameCon1 == username || c.UsernameCon2 == username))
+                {
+                    if(connection.UsernameCon1 != username)
+                    {
+                        connections.Add(connection.UsernameCon1);
+                    }
+                    else if(connection.UsernameCon2 != username)
+                    {
+                        connections.Add(connection.UsernameCon2);
+                    }
+                }
+                foreach (var post in ctx.Post.Where(p => p.username == username))
                 {
                     posts.Add(new Post
                     {
@@ -117,8 +129,22 @@ namespace ScSoMeAPI.Controllers
                         username = post.username,
                         content = post.content,
                         likes = post.likes,
-                        createdDate = DateTime.Now,
+                        createdDate = post.createdDate,
                     });
+                }
+                foreach (var con in connections)
+                {
+                    foreach (var post in ctx.Post.Where(p => p.username.Equals(con)))
+                    {
+                        posts.Add(new Post
+                        {
+                            postID = post.postID,
+                            username = post.username,
+                            content = post.content,
+                            likes = post.likes,
+                            createdDate = post.createdDate,
+                        });
+                    }
                 }
 
             }
@@ -133,7 +159,8 @@ namespace ScSoMeAPI.Controllers
                 };
 
             }
-            return posts;
+            return  posts.OrderByDescending(p => p.createdDate).ToList();
+         
         }
 
         [HttpPost]
