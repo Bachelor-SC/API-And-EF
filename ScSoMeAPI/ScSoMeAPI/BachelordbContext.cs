@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using ScSoMeAPI.Models;
@@ -26,6 +26,8 @@ public partial class BachelordbContext : DbContext
 
     public virtual DbSet<Post> Post { get; set; }
 
+    public virtual DbSet<Coach> Coaches { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 
         => optionsBuilder.UseSqlServer(Environment.GetEnvironmentVariable("connString"));
@@ -52,6 +54,29 @@ public partial class BachelordbContext : DbContext
                 .IsRequired()
                 .HasMaxLength(50)
                 .HasColumnName("type");
+        });
+        modelBuilder.Entity<Coach>(entity =>
+        {
+            entity.HasKey(e => new { e.username }).HasName("PK__Coaches__F3DBC5738FCC8819");
+
+            entity.ToTable("Coaches");
+
+            entity.Property(e => e.username)
+                .HasMaxLength(50)
+                .HasColumnName("username");
+            entity.Property(e => e.name)
+                .HasMaxLength(50)
+                .HasColumnName("name");
+            entity.Property(e => e.shortDesc)
+                .HasMaxLength(100)
+                .HasColumnName("shortDesc");
+            entity.Property(e => e.content)
+                .HasMaxLength(8000)
+                .HasColumnName("content");
+            entity.Property(e => e.picture)
+                .IsRequired()
+                .HasMaxLength(50)
+                .HasColumnName("picture");
         });
 
         modelBuilder.Entity<Connection>(entity =>
