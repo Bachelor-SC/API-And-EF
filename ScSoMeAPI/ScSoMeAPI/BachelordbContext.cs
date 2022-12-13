@@ -21,7 +21,7 @@ public partial class BachelordbContext : DbContext
     public virtual DbSet<Activity> Activities { get; set; }
 
     public virtual DbSet<Connection> Connections { get; set; }
-
+    public virtual DbSet<Block> Blocks { get; set; }
     public virtual DbSet<User> Users { get; set; }
     public virtual DbSet<UserInfoDB> UserInfo { get; set; }
 
@@ -90,6 +90,23 @@ public partial class BachelordbContext : DbContext
         modelBuilder.Entity<Connection>(entity =>
         {
             entity.HasKey(e => new { e.UsernameCon1, e.UsernameCon2 }).HasName("PK__Connecti__EA82CC7956863E80");
+
+            entity.Property(e => e.UsernameCon1)
+                .HasMaxLength(50)
+                .HasColumnName("usernameCon1");
+            entity.Property(e => e.UsernameCon2)
+                .HasMaxLength(50)
+                .HasColumnName("usernameCon2");
+            entity.Property(e => e.CreatedDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnName("createdDate");
+        });
+
+        // BLOCKS TABLE
+        modelBuilder.Entity<Block>(entity =>
+        {
+            entity.ToTable("Blocks");
+            entity.HasKey(e => new { e.UsernameCon1, e.UsernameCon2 }).HasName("PK__Blocks__EA82CC79A8B974E8");
 
             entity.Property(e => e.UsernameCon1)
                 .HasMaxLength(50)
